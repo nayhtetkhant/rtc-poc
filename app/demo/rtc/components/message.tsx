@@ -19,14 +19,6 @@ export default function Message() {
     const [message , setMessage] = useState<string>("");
 
     const SentMessageHandler = () => {
-        // setMessageList([
-        //     ...messageLists,
-        //     {
-        //         id : Number(localStorage.getItem('userId')!),
-        //         message ,
-        //     }
-        // ]);
-
         broadCast({
             id :  Number(sessionStorage.getItem('userId')!) , 
             message

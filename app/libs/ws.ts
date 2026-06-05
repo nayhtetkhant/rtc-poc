@@ -17,8 +17,20 @@ export async function broadCast(message:Message) {
   });
 }
 
-export async function phoneCall(sdp:string) {
+export async function phoneCallPusher(data:object) {
   await pusher.trigger("phoneCallChannel" , "phoneCallEvent" , {
-    data : sdp
+    data
+  })
+}
+
+export async function iceCandidatePusher(data:object) {
+  await pusher.trigger("phoneCallChannel" , "iceCandidateEvent" , {
+    data
+  })
+}
+
+export async function phoneAnswerPusher(data:object) {
+  await pusher.trigger("phoneCallChannel" , "phoneAnswerEvent" , {
+    data
   })
 }
