@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 import { configuration } from "../data/data";
 import { iceCandidatePusher, phoneAnswerPusher, phoneCallPusher } from "@/app/libs/ws";
-import { prerender } from "react-dom/static";
 
 export function useRtc(remoteVideoRef: React.RefObject<HTMLVideoElement | null>) {
     const peerConnection = useRef<RTCPeerConnection | null>(null);
@@ -20,16 +19,14 @@ export function useRtc(remoteVideoRef: React.RefObject<HTMLVideoElement | null>)
             }
         }
 
-        peerConnection.current.ontrack = (event) => {
+        peerConnection.current.ontrack = async (event) => {
             console.log("TRACK RECEIVED", event);
             console.log("streams", event.streams);
 
-            if (remoteVideoRef.current && event.streams[0]) {
+            if(remoteVideoRef.current) {
                 remoteVideoRef.current.srcObject = event.streams[0];
-
-                console.log( " vv" , remoteVideoRef.current);
-                console.log('video' ,  event.streams[0]);
             }
+            
         };
 
         peerConnection.current.onconnectionstatechange = () => {
@@ -64,6 +61,7 @@ export function useRtc(remoteVideoRef: React.RefObject<HTMLVideoElement | null>)
 
             phoneCallPusher({
                 requesterId: userId,
+                isVideo,
                 type: offer.type,
                 sdp: offer.sdp 
             });
@@ -72,7 +70,7 @@ export function useRtc(remoteVideoRef: React.RefObject<HTMLVideoElement | null>)
         }
     }
 
-    const createAnswer = async(offer : RTCSessionDescriptionInit ,isAccepted : boolean , responserId : number , isVideo : boolean , isAudio : boolean) => {
+    const createAnswer = async(offer : RTCSessionDescriptionInit ,isAccepted : boolean , responserId : number , isAudio : boolean , isVideo : boolean) => {
         if(!isAccepted) {
             phoneAnswerPusher({
                 isAccepted,
@@ -83,7 +81,6 @@ export function useRtc(remoteVideoRef: React.RefObject<HTMLVideoElement | null>)
         }
 
         if(peerConnection.current) {
-            console.log('inside');
             const localStream = await navigator.mediaDevices.getUserMedia({video : isVideo , audio : isAudio});
 
             localStream.getTracks().forEach((track) => {

@@ -3,9 +3,9 @@
 import { broadCast } from "@/app/libs/ws";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { run } from "node:test";
 import Pusher from "pusher-js";
 import { useEffect, useState } from "react";
+import { ChildProps } from "./rtc";
 
 export interface Message {
     id : number ,
@@ -14,13 +14,13 @@ export interface Message {
 
 type MessageList = Message[];
 
-export default function Message() {
+export default function Message({userId} : ChildProps) {
     const [messageLists , setMessageList] = useState<MessageList>([]);
     const [message , setMessage] = useState<string>("");
 
     const SentMessageHandler = () => {
         broadCast({
-            id :  Number(sessionStorage.getItem('userId')!) , 
+            id :  userId, 
             message
         });
 
@@ -35,10 +35,6 @@ export default function Message() {
         const channel = pusher.subscribe('signallingChannel');
 
         channel.bind('signallingEvent' , (data:any) => {
-            // if(data.message.id == Number(sessionStorage.getItem('userId')!)) return;
-
-            console.log(data.message);
-
             setMessageList((prev) => [
                 ...prev,
                 data.message

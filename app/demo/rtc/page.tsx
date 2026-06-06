@@ -5,13 +5,5 @@ import PhoneCall from "./components/phoneCall";
 export default function RtcMain() {
     return(<div className="">
         <Rtc/>
-        <br />
-        <br />
-        <br />
-        <Message/>
-        <br />
-        <br />
-        <br />
-        <PhoneCall/>
     </div>)
 }
