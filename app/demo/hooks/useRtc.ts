@@ -103,8 +103,6 @@ export function useRtc(remoteVideoRef: React.RefObject<HTMLVideoElement | null>)
     }
 
     const addAnswer = async (answer:any) => {
-
-        console.log('run');
         if(peerConnection.current) {
             if(!peerConnection.current.currentRemoteDescription) {
                 await peerConnection.current.setRemoteDescription(new RTCSessionDescription(answer));
@@ -128,21 +126,26 @@ export function useRtc(remoteVideoRef: React.RefObject<HTMLVideoElement | null>)
     }
 
     const flushCandidateQueue = async () => {
-    if (!peerConnection.current) return;
+        if (!peerConnection.current) return;
 
-    while (candidateQueue.current.length > 0) {
-        const candidate = candidateQueue.current.shift();
+        while (candidateQueue.current.length > 0) {
+            const candidate = candidateQueue.current.shift();
 
-        await peerConnection.current.addIceCandidate(
-            new RTCIceCandidate(candidate)
-        );
+            await peerConnection.current.addIceCandidate(
+                new RTCIceCandidate(candidate)
+            );
+        }
+    };
+
+    const endConnection = () => {
+        peerConnection.current?.close();
     }
-};
 
     return {
         createOffer,
         createAnswer,
         addIceCandidate,
-        addAnswer
+        addAnswer,
+        endConnection
     }
 }

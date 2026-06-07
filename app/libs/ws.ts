@@ -18,19 +18,17 @@ export async function broadCast(message:Message) {
 }
 
 export async function phoneCallPusher(data:object) {
-  await pusher.trigger("phoneCallChannel" , "phoneCallEvent" , {
-    data
-  })
+  await pusher.trigger("phoneCallChannel" , "phoneCallEvent" , data)
 }
 
 export async function iceCandidatePusher(data:object) {
-  await pusher.trigger("phoneCallChannel" , "iceCandidateEvent" , {
-    data
-  })
+  await pusher.trigger("phoneCallChannel" , "iceCandidateEvent" , data)
 }
 
 export async function phoneAnswerPusher(data:object) {
-  await pusher.trigger("phoneCallChannel" , "phoneAnswerEvent" , {
-    data
-  })
+  await pusher.trigger("phoneCallChannel" , "phoneAnswerEvent" , data)
+}
+
+export async function phoneEndPusher(data:object) {
+  await pusher.trigger("phoneCallChannel" , "phoneEndEvent" , data) 
 }
